@@ -7,3 +7,5 @@ node_modules/
 *.db-wal
 *.db-shm
 .pytest_cache/
+.coverage
+htmlcov/

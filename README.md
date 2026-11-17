@@ -51,6 +51,18 @@ SQLite · Docker · nginx
 
 Docs interativas: http://127.0.0.1:8000/docs (só em desenvolvimento)
 
+## Testes
+
+    cd backend
+    pip install -r requirements-dev.txt
+    python -m pytest --cov=app
+
+Cada teste roda num SQLite em memória novo (fixtures em `tests/conftest.py`), sem
+tocar no banco de desenvolvimento. Cobrem eventos (rotas públicas, CRUD e admin),
+auth (login, JWT inválido/vencido, refresh com rotação e reuso, logout), o limitador
+de tentativas e o hash de senha. O GitHub Actions roda a verificação de migrações
+e os testes a cada push.
+
 ## Migrações do banco (Alembic)
 
 O esquema do banco é controlado por migrações em `backend/alembic/versions/`
