@@ -1,5 +1,7 @@
 # fastapi-clean-api
 
+[![CI](https://github.com/mPadovani74/fastapi-clean-api/actions/workflows/ci.yml/badge.svg)](https://github.com/mPadovani74/fastapi-clean-api/actions/workflows/ci.yml)
+
 API REST de eventos em **FastAPI + SQLModel**, organizada em camadas por domínio,
 com autenticação JWT (refresh token com rotação), migrações Alembic e deploy via
 Docker + nginx.
