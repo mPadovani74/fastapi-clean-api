@@ -1,7 +1,7 @@
 from urllib.parse import urlparse
 
 from pydantic import AwareDatetime, field_validator
-from sqlmodel import SQLModel
+from sqlmodel import Field, SQLModel
 
 
 class EventoBase(SQLModel):
@@ -13,6 +13,7 @@ class EventoBase(SQLModel):
     link_inscricao: str | None = None
     imagem_url: str | None = None
     publicado: bool = True
+    vagas: int | None = Field(default=None, ge=0)
 
 
 def _somente_http(valor: str | None) -> str | None:
@@ -43,7 +44,10 @@ class EventoUpdateRequest(SQLModel):
     link_inscricao: str | None = None
     imagem_url: str | None = None
     publicado: bool | None = None
+    vagas: int | None = Field(default=None, ge=0)
 
 
 class EventoResponse(EventoBase):
     id: int
+    criado_em: AwareDatetime
+    alterado_em: AwareDatetime | None = None
