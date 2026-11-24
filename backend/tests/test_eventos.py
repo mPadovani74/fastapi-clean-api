@@ -9,9 +9,6 @@ def corpo(**campos):
     return {"titulo": "Palestra", "inicio": INICIO, **campos}
 
 
-# --- rotas públicas ---
-
-
 def test_listagem_publica_so_traz_publicados_futuros(client, criar_evento):
     criar_evento(titulo="Futuro")
     criar_evento(titulo="Rascunho", publicado=False)
@@ -51,9 +48,6 @@ def test_evento_inexistente_devolve_404(client):
     assert client.get("/eventos/999").status_code == 404
 
 
-# --- rotas protegidas: sem token ---
-
-
 @pytest.mark.parametrize(
     "metodo, url",
     [
@@ -69,9 +63,6 @@ def test_rotas_protegidas_exigem_token(client, metodo, url):
     resposta = getattr(client, metodo)(url, **extra)
 
     assert resposta.status_code == 401
-
-
-# --- CRUD autenticado ---
 
 
 def test_criar_evento_devolve_201(client_admin):
@@ -145,9 +136,6 @@ def test_delete_devolve_204_e_remove(client_admin, criar_evento):
 
 def test_delete_evento_inexistente_devolve_404(client_admin):
     assert client_admin.delete("/eventos/999").status_code == 404
-
-
-# --- admin ---
 
 
 def test_admin_lista_rascunhos_e_passados(client_admin, criar_evento):

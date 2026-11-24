@@ -5,12 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
@@ -18,23 +14,13 @@ from sqlmodel import SQLModel
 
 from app.config import settings
 
-# Importar TODAS as entidades: é o import que as registra no metadata.
-# Sem ele o autogenerate não as enxerga e gera uma migração vazia.
-# Entidade nova (ex.: app.livros.entity) => adicione o import aqui.
 import app.auth.refresh_token.entity  # noqa: F401
 import app.eventos.entity  # noqa: F401
 import app.usuarios.entity  # noqa: F401
 
-# A mesma URL do banco que a API usa (vem do .env / variável de ambiente).
-# "%" é escapado porque o configparser do alembic trata "%" como interpolação.
 config.set_main_option("sqlalchemy.url", settings.database_url.replace("%", "%%"))
 
 target_metadata = SQLModel.metadata
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
 
 
 def run_migrations_offline() -> None:
@@ -55,7 +41,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        render_as_batch=True,  # SQLite altera tabelas copiando para uma nova
+        render_as_batch=True,
     )
 
     with context.begin_transaction():
@@ -79,7 +65,7 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            render_as_batch=True,  # SQLite altera tabelas copiando para uma nova
+            render_as_batch=True,
         )
 
         with context.begin_transaction():

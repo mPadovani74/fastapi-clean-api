@@ -61,7 +61,6 @@ class AuthService:
         if usuario is None or not usuario.ativo:
             raise CredenciaisInvalidas()
 
-        # Rotação: o token usado é revogado e nasce um novo, na mesma família.
         self.refresh_repository.revogar(registro)
         novo_refresh = self._emitir_refresh_token(usuario.id, registro.familia)
 
@@ -71,8 +70,6 @@ class AuthService:
         )
 
     def logout(self, token_recebido: str) -> None:
-        # Nunca falha: token inexistente ou já revogado também dá "saiu".
-        # Assim o logout não serve para descobrir se um token é válido.
         registro = self.refresh_repository.find_by_hash(
             hash_refresh_token(token_recebido)
         )

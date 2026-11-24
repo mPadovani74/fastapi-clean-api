@@ -26,14 +26,13 @@ MANTER_BACKUPS = 5
 
 def _backup(versao_atual: str, versao_nova: str) -> None:
     if engine.url.get_backend_name() != "sqlite" or not engine.url.database:
-        return  # em Postgres, o backup é do próprio banco (pg_dump)
+        return
     origem = Path(engine.url.database)
     pasta = origem.parent / "backups"
     pasta.mkdir(exist_ok=True)
     agora = datetime.now().strftime("%Y%m%d-%H%M%S")
     destino = pasta / f"{origem.stem}-{agora}-{versao_atual}-para-{versao_nova}.db"
 
-    # API de backup do SQLite: cópia consistente mesmo com o banco em uso.
     conexao_origem, conexao_destino = sqlite3.connect(origem), sqlite3.connect(destino)
     try:
         conexao_origem.backup(conexao_destino)
@@ -50,7 +49,7 @@ def _backup(versao_atual: str, versao_nova: str) -> None:
 def main() -> None:
     config = Config("alembic.ini")
     script = ScriptDirectory.from_config(config)
-    head = script.get_current_head()  # erro se houver mais de uma head
+    head = script.get_current_head()
 
     with engine.connect() as conexao:
         atual = MigrationContext.configure(conexao).get_current_revision()

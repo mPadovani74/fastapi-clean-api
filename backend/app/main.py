@@ -17,7 +17,6 @@ logging.basicConfig(
 )
 
 
-# Em produção a documentação interativa some: não entrega o mapa da API.
 app = FastAPI(
     title="fastapi-clean-api",
     docs_url=None if settings.producao else "/docs",
@@ -38,7 +37,6 @@ async def headers_de_seguranca(request: Request, call_next):
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
     if request.url.path.startswith("/auth"):
-        # Respostas de autenticação carregam tokens: nada de cache.
         response.headers["Cache-Control"] = "no-store"
     return response
 

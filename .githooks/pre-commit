@@ -1,6 +1,4 @@
 #!/bin/sh
-# Antes de cada commit que mexa no backend, confere o versionamento das migrações.
-# Ativar (uma vez por clone): git config core.hooksPath .githooks
 if git diff --cached --name-only | grep -qE '^backend/(app/|alembic/|alembic\.ini)'; then
     sh "$(git rev-parse --show-toplevel)/backend/scripts/verificar_migracoes.sh" || {
         echo "Commit bloqueado: corrija as migrações."
