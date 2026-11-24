@@ -16,8 +16,6 @@ def criar_token(email: str) -> str:
 
 
 def decodificar_token(token: str) -> dict:
-    # "require": sem exp ou sem sub o token é recusado (o PyJWT, sozinho, só
-    # valida o vencimento se o campo existir).
     return jwt.decode(
         token,
         settings.secret_key,

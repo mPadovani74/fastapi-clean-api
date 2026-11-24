@@ -20,8 +20,6 @@ def get_evento_service(
 
 router = APIRouter(prefix="/eventos", tags=["eventos"])
 
-# Rotas de leitura para o painel: enxergam também rascunhos e eventos já
-# realizados. O Depends no router protege todas de uma vez (401 sem token).
 admin_router = APIRouter(
     prefix="/admin/eventos",
     tags=["eventos (admin)"],

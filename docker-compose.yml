@@ -8,7 +8,6 @@ services:
     volumes:
       - dados:/data
     restart: unless-stopped
-    # expose (e não ports): só o nginx alcança a API
     expose:
       - "8000"
 

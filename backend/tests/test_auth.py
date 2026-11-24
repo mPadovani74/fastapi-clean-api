@@ -15,9 +15,6 @@ def cabecalho(token):
     return {"Authorization": f"Bearer {token}"}
 
 
-# --- login ---
-
-
 def test_login_valido_devolve_os_dois_tokens(client, usuario):
     resposta = login(client)
 
@@ -51,11 +48,7 @@ def test_cinco_falhas_bloqueiam_com_429(client, usuario):
     for _ in range(5):
         assert login(client, senha="errada-errada").status_code == 401
 
-    # Bloqueado até com a senha certa.
     assert login(client).status_code == 429
-
-
-# --- rota protegida ---
 
 
 def test_eu_devolve_o_usuario_logado(client, usuario):
@@ -105,9 +98,6 @@ def test_token_de_usuario_desativado_devolve_401(client, session, usuario):
     assert client.get("/auth/eu", headers=cabecalho(token)).status_code == 401
 
 
-# --- refresh e logout ---
-
-
 def test_refresh_troca_por_um_par_novo(client, usuario):
     antigo = login(client).json()["refresh_token"]
 
@@ -128,7 +118,7 @@ def test_reuso_de_refresh_encerra_a_sessao_inteira(client, usuario):
     antigo = login(client).json()["refresh_token"]
     novo = client.post("/auth/refresh", json={"refresh_token": antigo}).json()["refresh_token"]
 
-    client.post("/auth/refresh", json={"refresh_token": antigo})  # reuso: derruba a família
+    client.post("/auth/refresh", json={"refresh_token": antigo})
 
     assert client.post("/auth/refresh", json={"refresh_token": novo}).status_code == 401
 
@@ -146,9 +136,6 @@ def test_logout_revoga_o_refresh_token(client, usuario):
 
 def test_logout_com_token_desconhecido_tambem_devolve_204(client):
     assert client.post("/auth/logout", json={"refresh_token": "nao-existe"}).status_code == 204
-
-
-# --- limitador ---
 
 
 def test_limitador_bloqueia_ao_atingir_o_maximo():

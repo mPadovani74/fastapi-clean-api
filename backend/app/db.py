@@ -2,7 +2,6 @@ from sqlmodel import Session, create_engine
 
 from .config import settings
 
-# check_same_thread=False: o SQLite por padrão só aceita uso na thread que criou a conexão
 engine = create_engine(
     settings.database_url, connect_args={"check_same_thread": False}
 )

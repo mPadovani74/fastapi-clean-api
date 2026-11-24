@@ -1,9 +1,4 @@
 #!/bin/sh
-# Confere o versionamento das migrações. Falha (exit 1) se:
-#   1. o histórico tiver mais de uma "head" (migrações ramificadas); ou
-#   2. as entidades tiverem mudanças sem migração correspondente.
-# Não toca no seu banco: usa um SQLite temporário.
-# Usado pelo hook de pre-commit (.githooks/pre-commit) e serve para o CI.
 set -e
 cd "$(dirname "$0")/.."
 

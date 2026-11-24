@@ -9,10 +9,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
 
-    # "development" ou "production". Em produção /docs, /redoc e /openapi.json
-    # ficam desligados.
     environment: str = "development"
-    # Origens permitidas pelo CORS, separadas por vírgula.
     cors_origins: str = "http://localhost:5173"
     database_url: str = "sqlite:///./app.db"
 

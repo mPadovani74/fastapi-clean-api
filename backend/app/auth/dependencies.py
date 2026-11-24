@@ -10,7 +10,6 @@ from .exceptions import CredenciaisInvalidas
 from .refresh_token.repository import RefreshTokenRepository
 from .tokens import decodificar_token
 
-# auto_error=False: sem header ele devolve None e o 401 é decidido aqui.
 bearer = HTTPBearer(auto_error=False)
 
 
@@ -42,7 +41,6 @@ def usuario_atual(
     if email is None:
         raise CredenciaisInvalidas()
 
-    # Usuário apagado ou desativado depois que o token foi emitido.
     usuario = repository.find_by_email(email)
     if usuario is None or not usuario.ativo:
         raise CredenciaisInvalidas()
