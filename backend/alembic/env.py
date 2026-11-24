@@ -16,6 +16,7 @@ from app.config import settings
 
 import app.auth.refresh_token.entity  # noqa: F401
 import app.eventos.entity  # noqa: F401
+import app.inscricao.entity  # noqa: F401
 import app.usuarios.entity  # noqa: F401
 
 config.set_main_option("sqlalchemy.url", settings.database_url.replace("%", "%%"))

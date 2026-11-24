@@ -1,7 +1,9 @@
 from datetime import datetime
 
+from sqlalchemy import delete
 from sqlmodel import Session, select
 
+from ..inscricao.entity import Inscricao
 from .entity import Evento
 
 
@@ -32,6 +34,7 @@ class EventoRepository:
         return evento
 
     def delete(self, evento: Evento) -> None:
+        self.session.exec(delete(Inscricao).where(Inscricao.evento_id == evento.id))
         self.session.delete(evento)
         self.session.commit()
 
