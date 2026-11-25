@@ -1,6 +1,6 @@
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session, select
+from sqlmodel import Session, col, select
 
 from .entity import Inscricao
 from .exceptions import InscricaoDuplicadaException
@@ -30,7 +30,7 @@ class InscricaoRepository:
         consulta = (
             select(Inscricao)
             .where(Inscricao.usuario_id == usuario_id)
-            .order_by(Inscricao.criado_em.desc())
+            .order_by(col(Inscricao.criado_em).desc())
         )
         return list(self.session.exec(consulta).all())
 

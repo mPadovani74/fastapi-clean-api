@@ -27,6 +27,13 @@ class InscricaoService:
             Inscricao(evento_id=evento_id, usuario_id=usuario_id)
         )
 
+    def buscar_minha(self, evento_id: int, usuario_id: int) -> Inscricao:
+        self.eventos.buscar_publicado(evento_id)
+        inscricao = self.repository.find_by_evento_e_usuario(evento_id, usuario_id)
+        if inscricao is None:
+            raise InscricaoNaoEncontradaException()
+        return inscricao
+
     def cancelar(self, evento_id: int, usuario_id: int) -> None:
         inscricao = self.repository.find_by_evento_e_usuario(evento_id, usuario_id)
         if inscricao is None:
