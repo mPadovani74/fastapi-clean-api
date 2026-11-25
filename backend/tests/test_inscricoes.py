@@ -167,3 +167,74 @@ def test_apagar_evento_apaga_as_inscricoes(client, logar, usuario, criar_evento)
     assert client.delete(f"/eventos/{evento.id}").status_code == 204
 
     assert client.get("/inscricoes/minhas").json() == []
+
+
+def test_minha_inscricao_devolve_200_quando_inscrito(
+    client, logar, usuario, criar_evento
+):
+    logar(usuario)
+    evento = criar_evento()
+    criada = client.post(f"/eventos/{evento.id}/inscricoes").json()
+
+    resposta = client.get(f"/eventos/{evento.id}/inscricoes/minha")
+
+    assert resposta.status_code == 200
+    corpo = resposta.json()
+    assert corpo["id"] == criada["id"]
+    assert corpo["evento_id"] == evento.id
+    assert corpo["usuario_id"] == usuario.id
+
+
+def test_minha_inscricao_devolve_404_quando_nao_inscrito(
+    client, logar, usuario, criar_evento
+):
+    logar(usuario)
+    evento = criar_evento()
+
+    resposta = client.get(f"/eventos/{evento.id}/inscricoes/minha")
+
+    assert resposta.status_code == 404
+    assert resposta.json()["detail"] == "Inscrição não encontrada"
+
+
+def test_minha_inscricao_exige_autenticacao(client, criar_evento):
+    evento = criar_evento()
+
+    resposta = client.get(f"/eventos/{evento.id}/inscricoes/minha")
+
+    assert resposta.status_code == 401
+
+
+def test_minha_inscricao_evento_inexistente_devolve_404(client, logar, usuario):
+    logar(usuario)
+
+    resposta = client.get("/eventos/999/inscricoes/minha")
+
+    assert resposta.status_code == 404
+    assert resposta.json()["detail"] == "Evento 999 não encontrado"
+
+
+def test_minha_inscricao_rascunho_devolve_404(client, logar, usuario, criar_evento):
+    logar(usuario)
+    evento = criar_evento(publicado=False)
+
+    resposta = client.get(f"/eventos/{evento.id}/inscricoes/minha")
+
+    assert resposta.status_code == 404
+    assert resposta.json()["detail"] == f"Evento {evento.id} não encontrado"
+
+
+def test_minha_inscricao_nao_vaza_a_de_outro_usuario(
+    client, logar, usuario, outro_usuario, criar_evento
+):
+    evento = criar_evento()
+    logar(outro_usuario)
+    inscricao_b = client.post(f"/eventos/{evento.id}/inscricoes").json()
+
+    logar(usuario)
+    resposta = client.get(f"/eventos/{evento.id}/inscricoes/minha")
+
+    assert resposta.status_code == 404
+    assert resposta.json() == {"detail": "Inscrição não encontrada"}
+    assert str(inscricao_b["id"]) not in resposta.text
+    assert "usuario_id" not in resposta.text

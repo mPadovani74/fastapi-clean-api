@@ -46,3 +46,9 @@ def usuario_atual(
         raise CredenciaisInvalidas()
 
     return usuario
+
+
+def usuario_id_atual(usuario: Usuario = Depends(usuario_atual)) -> int:
+    if usuario.id is None:
+        raise CredenciaisInvalidas()
+    return usuario.id
